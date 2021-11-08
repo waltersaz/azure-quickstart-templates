@@ -16,4 +16,16 @@ steps:
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'ARMME'
+    subscriptionId: 'ba459cf2-96e9-41c2-aa5f-00b35a1e0620'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'az400'
+    location: 'West Europe'
+    templateLocation: 'Linked artifact'
+    csmFile: '**/azuredeploy.json'
+    csmParametersFile: '**/azuredeploy.parameters.json'
+    overrideParameters: '-webAppName mytest123456'
+    deploymentMode: 'Incremental'
