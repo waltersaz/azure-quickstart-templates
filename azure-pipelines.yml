@@ -11,12 +11,14 @@ pool:
 
 steps:
 - task: CopyFiles@2
+  displayName: 'Copy webapp'
   inputs:
     SourceFolder: 'quickstarts/microsoft.web/webapp-basic-linux'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/webapp'
 
 - task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy webapp'
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'ARMME'
@@ -31,12 +33,14 @@ steps:
     deploymentMode: 'Incremental'
 
 - task: CopyFiles@2
+  displayName: 'Copy network'
   inputs:
     SourceFolder: 'quickstarts/microsoft.network/azure-bastion'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)/network'
 
 - task: AzureResourceManagerTemplateDeployment@3
+  displayName: 'Deploy network'
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'ARMME'
