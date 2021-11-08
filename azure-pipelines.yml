@@ -14,7 +14,7 @@ steps:
   inputs:
     SourceFolder: 'quickstarts/microsoft.web/webapp-basic-linux'
     Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/webapp'
 
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
@@ -25,7 +25,27 @@ steps:
     resourceGroupName: 'az400'
     location: 'West Europe'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.ArtifactStagingDirectory)/azuredeploy.json'
-    csmParametersFile: '$(Build.ArtifactStagingDirectory)/azuredeploy.parameters.json'
+    csmFile: '$(Build.ArtifactStagingDirectory)/webapp/azuredeploy.json'
+    csmParametersFile: '$(Build.ArtifactStagingDirectory)/webapp/azuredeploy.parameters.json'
     overrideParameters: '-webAppName walterfranssen-123456'
+    deploymentMode: 'Incremental'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'quickstarts/microsoft.network/azure-bastion'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/network'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'ARMME'
+    subscriptionId: 'ba459cf2-96e9-41c2-aa5f-00b35a1e0620'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'az400'
+    location: 'West Europe'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.ArtifactStagingDirectory)/network/azuredeploy.json'
+    csmParametersFile: '$(Build.ArtifactStagingDirectory)/network/azuredeploy.parameters.json'
+    overrideParameters: '-bastionHostName walterfranssen-123456'
     deploymentMode: 'Incremental'
